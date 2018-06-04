@@ -10,6 +10,14 @@ public class Main {
 		// TODO Auto-generated method stub
 		Verwaltung verwaltung = new Verwaltung();
 		verwaltung.verwalten();
+		
+		
+		// Debug
+		Feld feld = new Feld('D', 2);
+		Schachbrett s = new Schachbrett(5, feld);
+		// Rekursiv-Klassisch
+		s.koordiniere(false);
+		// Rekursives zeug funktioniert
 	}
 
 }

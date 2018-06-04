@@ -9,7 +9,7 @@ public class Verwaltung {
 	public Verwaltung() {
 		// TODO Auto-generated constructor stub
 	}
-	
+	// Um die hier kümmere ich mich später 
 	public String verwalten() {
 		
 		
