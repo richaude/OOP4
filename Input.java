@@ -38,7 +38,7 @@ public class Input {
 		boolean weitermachen = true;
 		do {
 			String antwort = new String("");
-			System.out.println("Bitte das Startfeld in Schachnotation eingeben (ein Buchstabe, direkt gefolgt von einer Zahl, ohne Leerzeichen dazwischen).\nBuchstabe und Zahl muessen beide innerhalb der zuvor eingegebenen Dimension liegen:\n");
+			System.out.println("Bitte das Startfeld in Schachnotation eingeben (ein Buchstabe, direkt gefolgt von einer Zahl, ohne Leerzeichen , bsp: 'B2').\nBuchstabe und Zahl muessen beide innerhalb der zuvor eingegebenen Dimension liegen:\n");
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			try {
 				antwort = br.readLine().toLowerCase();
@@ -55,7 +55,7 @@ public class Input {
 						System.out.println("Der Wert der eingegebenen Zahl ist groesser als die zuvor eingegebene Dimension des Schachfelds. Bitte nochmal das Startfeld eingeben.\n");
 						continue;
 					}
-					startFeld = new Feld(x, y);
+					startFeld = new Feld(Character.toUpperCase(x), y);
 					weitermachen = false;
 				} else {
 					System.out.println("Es ist keine Eingabe in valider Schachnotation erfolgt. Bitte nochmal versuchen.\n");
@@ -105,7 +105,7 @@ public class Input {
 		boolean weitermachen = true;
 		int loesungen = 0;
 		do {
-			System.out.println("Bitte die Anzahl der zu ermittelnden Loesungen eingeben:\n");
+			System.out.println("Bitte die maximale Anzahl der zu ermittelnden Loesungen eingeben:\n");
 			String antwort = new String("");
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			try {

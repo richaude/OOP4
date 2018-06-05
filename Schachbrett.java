@@ -12,20 +12,22 @@ public class Schachbrett {
 	private Feld[][] felder;
 	private List<Feld> pfad;
 	private Set<Feld> besuchteFelder;
-	private boolean abbruch = false;
+	private int loesungsAnzahl = 0;
+	private int auszugebendeLoesungen;
 	
 	/**
 	 * Initlisiert Schachfeld per Dimension und Startfeld des Springers
 	 * @param dimension Dimension des Schachfeldes, wird an InitialisiereFelder() weitergereicht
 	 * @param startFeld StartFeld des Springers
 	 */
-	public Schachbrett(int dimension, Feld startFeld) {
+	public Schachbrett(int dimension, Feld startFeld, int auszugebendeLoesungen) {
 		this.startFeld = startFeld;
 		this.springer = new Springer(this.startFeld);
 		initialisiereFelder(dimension);
 		ermittleEckfelder();
 		this.pfad = new ArrayList<Feld>();
 		this.besuchteFelder = new HashSet<Feld>();
+		this.auszugebendeLoesungen = auszugebendeLoesungen;
 	}
 	
 	/**
@@ -93,23 +95,32 @@ public class Schachbrett {
 		return eckfelder;
 	}
 
+	/**
+	 * Koordiniert den Programmablauf in Bezug auf den gewuenschten Modus
+	 * @param modus Modus des Springerproblems, True fuer klassisch, False fuer einfach
+	 */
 	public void koordiniere(boolean modus) {	
 		if(modus) {
 			rekursivKlassisch(this.startFeld, this.pfad);
-			//DEBUG
 			
-			if(this.pfad.isEmpty()) {
-				System.out.println("Keinen Weg mit dieser Kombination von Schachbrett-Dimension und Startfeld gefunden!");
+			if(this.loesungsAnzahl == 0) {
+				System.out.println("Leider konnten wir keinen Weg mit dieser Kombination von Schachbrett-Dimension und Startfeld finden! Vielleicht sollten sie ein anderes Startfeld probieren?");
 			}
-			
 		}
 		else {
 			rekursivEinfach(this.startFeld, this.pfad);
-			if(this.pfad.isEmpty()) {
+			
+			if(this.loesungsAnzahl == 0) {
 				System.out.println("Keinen Weg mit dieser Kombination von Schachbrett-Dimension und Startfeld gefunden!");
 			}
 		}
+		// hier muss nochwas hin
+		System.out.println("\n\nAnzahl aller Pfade, die die Loesung des Problems verkoerpern: " + this.loesungsAnzahl);
 	}	
+	/**
+	 * Bestimmt anhand der Position des Springers auf dem Schachbrett die moeglichen Felder, auf die er verschoben werden koennte, shuffled diese um mehrere Loesungen zu Ermoeglichen
+	 * @return Die Liste aller moeglichen Felder, auf die der Springer springen koennte
+	 */
 	public List<Feld> moeglicheFelder() {
 		// Halte moegliche Felder, aktuelles Feld und dessen Koordinaten, RandKoordinaten
 		List<Feld> rueckgabe = new ArrayList<Feld>();
@@ -153,8 +164,6 @@ public class Schachbrett {
 			if(((y+1) <= rY) && ( x != 'A' ) && (x != 'B')) {
 				rueckgabe.add(new Feld((char) (x-2), y+1));
 			}
-			//sieht ok aus bis hier
-			
 			
 			// Zwei runter eins links
 			if(((y-1) >= 1) && ( x != rX ) && (x != rX2 )) {
@@ -187,12 +196,15 @@ public class Schachbrett {
 			System.out.println("FELD:= " + f);
 		}
 		*/
-		
 		// Rueckgabe
 		return finalList;
 	}
 	
-
+	/** ermittelt Rekursiv die komplexe Loesung des klassischen Springerproblems
+	 * 
+	 * @param aktuellesFeld Feld auf dem sich der Springer momentan befindet
+	 * @param pfad Pfad den der Springer schon gesprungen ist
+	 */	
 	public void rekursivKlassisch(Feld aktuellesFeld, List<Feld> pfad) {
 		pfad.add(aktuellesFeld);
 		besuchteFelder.add(aktuellesFeld);
@@ -208,11 +220,13 @@ public class Schachbrett {
 				System.out.println("FELD:= "+f);
 			}
 			*/
-			
 			this.pfad = pfad;
-			helpful(pfad);
-			this.abbruch = true;
-			return;
+			this.loesungsAnzahl += 1;
+			if(this.auszugebendeLoesungen > 0) {
+				helpful(pfad);
+				auszugebendeLoesungen -=1;
+			}
+			
 		}	
 		List<Feld> verfuegbareFelder = moeglicheFelder();
 		
@@ -226,19 +240,21 @@ public class Schachbrett {
 			besuchteFelder.remove(aktuellesFeld);
 		}
 		else {
-			for(Feld f: verfuegbareFelder) {
-				if(!abbruch) {
-					verschiebeSpringer(f);
-					//System.out.println("Verschiebe Springer auf " + f);
-					rekursivKlassisch(springer.getPosition(), pfad);
-				}
+			for(Feld f: verfuegbareFelder) {		
+				verschiebeSpringer(f);
+				//System.out.println("Verschiebe Springer auf " + f);
+				rekursivKlassisch(springer.getPosition(), pfad);		
 			}
 			pfad.remove(aktuellesFeld);
 			besuchteFelder.remove(aktuellesFeld);
 		}
-		
 	}
 	
+	/** ermittelt Rekursiv die Loesung des einfachen Springerproblems
+	 *  ~ muss noch angepassat werden
+	 * @param aktuellesFeld Feld auf dem sich der Springer momentan befindet
+	 * @param pfad Pfad den der Springer schon gesprungen ist
+	 */	
 	public void rekursivEinfach(Feld aktuellesFeld, List<Feld> pfad) {
 		pfad.add(aktuellesFeld);
 		besuchteFelder.add(aktuellesFeld);
@@ -262,10 +278,9 @@ public class Schachbrett {
 			}
 			*/
 			
-			this.pfad = pfad;
+			this.pfad.add(aktuellesFeld);
 			helpful(pfad);
-			this.abbruch = true;
-			return;
+			this.loesungsAnzahl += 1;
 		}	
 		List<Feld> verfuegbareFelder = moeglicheFelder();
 		
@@ -280,25 +295,35 @@ public class Schachbrett {
 		}
 		else {
 			for(Feld f: verfuegbareFelder) {
-				if(!abbruch) {
-					verschiebeSpringer(f);
-					//System.out.println("Verschiebe Springer auf " + f);
-					rekursivKlassisch(springer.getPosition(), pfad);
-				}
+				verschiebeSpringer(f);
+				//System.out.println("Verschiebe Springer auf " + f);
+				rekursivKlassisch(springer.getPosition(), pfad);
 			}
 			pfad.remove(aktuellesFeld);
 			besuchteFelder.remove(aktuellesFeld);
-		}
-		
-		
+		}				
 	}
-	
+
+	/**
+	 * Gibt den Erfolgreichen Pfad aus, falls er geschlossen ist, gibt es eine zusaetzliche Meldung
+	 * @param pfad der auszugebende Pfad
+	 */
 	private void helpful(List<Feld> pfad) {
-		System.out.println("Wir haben einen Pfad gefunden, der ihr Problem loest: \n");
+		System.out.println("\n\nPfad, der ihr Problem loest: \n");
 		for(Feld f: pfad) {
 			System.out.print("--> " + f);
 		}
 		this.pfad = pfad;
+		
+		//Versuche auf besonderen Weg zu testen, Springer ist noch bei letztem Feld, noch testen!
+		// Schaffe Voraussetzungen
+		 besuchteFelder.remove(this.startFeld);
+		 // Teste
+		 if(moeglicheFelder().contains(this.startFeld)) {
+		 System.out.println("Dieser Pfad ist ein geschlossener Pfad, denn es ware dem Springer moeglich, von seiner letzten Position zum Startfeld zu springen!");
+		 }
+		 // Negiere Voraussetzungen
+		 besuchteFelder.add(this.startFeld);
 	}
 	
 	/**
@@ -315,5 +340,8 @@ public class Schachbrett {
 	 */
 	public List<Feld> getPfad() {
 		return this.pfad;
+	}
+	public int getLoesungsAnzahl() {
+		return this.loesungsAnzahl;
 	}
 }

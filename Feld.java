@@ -16,5 +16,20 @@ public class Feld {
 		ausgabe.append(Integer.toString(y));
 		return ausgabe.toString();
 	}
-
+	public char getX() {
+		return this.x;
+	}
+	
+	public int getY() {
+		return this.y;
+	}
+	
+	public boolean equals(Feld f) {
+		if(this.getX() == f.getX()) {
+			if(this.getY() == f.getY()) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
