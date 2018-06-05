@@ -5,8 +5,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Diese Klasse erstellt das Schachbrett und kuemmert sich um die Loesung des Springerproblems
+ * @author Lukas
+ * @version 1.0
+ */
 public class Schachbrett {
-
+	
 	private Feld startFeld;
 	private Springer springer;	
 	private Feld[][] felder;
@@ -116,7 +121,8 @@ public class Schachbrett {
 		}
 		// hier muss nochwas hin
 		System.out.println("\n\nAnzahl aller Pfade, die die Loesung des Problems verkoerpern: " + this.loesungsAnzahl);
-	}	
+	}
+	
 	/**
 	 * Bestimmt anhand der Position des Springers auf dem Schachbrett die moeglichen Felder, auf die er verschoben werden koennte, shuffled diese um mehrere Loesungen zu Ermoeglichen
 	 * @return Die Liste aller moeglichen Felder, auf die der Springer springen koennte
@@ -249,18 +255,6 @@ public class Schachbrett {
 			besuchteFelder.remove(aktuellesFeld);
 		}
 	}
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	/** ermittelt Rekursiv die Loesung des einfachen Springerproblems
 	 *  ~ muss noch angepassat werden
@@ -333,19 +327,6 @@ public class Schachbrett {
 		}	
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	/**
 	 * Gibt den Erfolgreichen Pfad aus, falls er geschlossen ist, gibt es eine zusaetzliche Meldung
 	 * @param pfad der auszugebende Pfad
@@ -367,6 +348,15 @@ public class Schachbrett {
 		 // Negiere Voraussetzungen
 		 besuchteFelder.add(this.startFeld);
 	}
+	/**
+	 * Entscheidet, ob ein gegebenes Feld Element einer Liste aus Feldern ist.
+	 * @param feld zu Untersuchendes Feld
+	 * @param zuUntersuchendeListe zu Untersuchende Liste
+	 * @return True wenn Feld Element der Liste, sonst False
+	 * 
+	 * True falls Feld Element der Liste ist
+	 */
+	
 	private boolean containsFeld(Feld feld, List<Feld> zuUntersuchendeListe) {
 		boolean rueckgabe = false;
 		for(Feld f : zuUntersuchendeListe) {
@@ -379,6 +369,7 @@ public class Schachbrett {
 		}
 		return rueckgabe;
 	}
+	
 	/**
 	 * Verschiebt die Position des Springers
 	 * @param wohin Feld, auf das der Springer verschoben wird
