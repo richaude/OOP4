@@ -59,7 +59,7 @@ public class Input {
 						System.out.println("Der Wert der eingegebenen Zahl ist groesser als die zuvor eingegebene Dimension des Schachfelds. Bitte nochmal das Startfeld eingeben.\n");
 						continue;
 					}
-					startFeld = new Feld(x, y);
+					startFeld = new Feld(Character.toUpperCase(x), y);
 					weitermachen = false;
 				} else {
 					System.out.println("Es ist keine Eingabe in valider Schachnotation erfolgt. Bitte nochmal versuchen.\n");

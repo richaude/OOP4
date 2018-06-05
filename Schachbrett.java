@@ -249,6 +249,18 @@ public class Schachbrett {
 			besuchteFelder.remove(aktuellesFeld);
 		}
 	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	/** ermittelt Rekursiv die Loesung des einfachen Springerproblems
 	 *  ~ muss noch angepassat werden
@@ -258,16 +270,25 @@ public class Schachbrett {
 	public void rekursivEinfach(Feld aktuellesFeld, List<Feld> pfad) {
 		pfad.add(aktuellesFeld);
 		besuchteFelder.add(aktuellesFeld);
-		boolean checked = true;
-		
-		for(Feld h : ermittleEckfelder()) {
-			if( !pfad.contains(h)) {
-				checked = false;
+		List<Feld> eckfelder = ermittleEckfelder();
+		boolean finishedPath = true;
+	
+		/*
+		System.out.println("\n\n\n");
+		for(Feld f : pfad) {
+			System.out.print(f + " -> ");
+		}
+		*/
+		//Abbruchbedingung und Variable
+		for(Feld f : eckfelder) {
+			if(!containsFeld(f,pfad)) {
+				finishedPath = false;
 			}
 		}
+		//System.out.println("\n"+finishedPath);
 		
-		//Abbruchbedingung und Variable
-		if(checked) {
+		
+		if(finishedPath) {
 			//System.out.println("Volle Pfadlaenge erreicht");
 			
 			//Debug
@@ -277,33 +298,54 @@ public class Schachbrett {
 				System.out.println("FELD:= "+f);
 			}
 			*/
-			
-			this.pfad.add(aktuellesFeld);
-			helpful(pfad);
+			this.pfad = pfad;
 			this.loesungsAnzahl += 1;
-		}	
-		List<Feld> verfuegbareFelder = moeglicheFelder();
-		
-		if(verfuegbareFelder.isEmpty()) {
-			// Springer kommt nicht weiter, gehe zureuck
-			//Debug 
-			/*
-			System.out.println("Kommt nicht weiter bei Feld: "+ aktuellesFeld + " schiebe ihn also zureuck");
-			*/
-			pfad.remove(aktuellesFeld);
-			besuchteFelder.remove(aktuellesFeld);
-		}
-		else {
-			for(Feld f: verfuegbareFelder) {
-				verschiebeSpringer(f);
-				//System.out.println("Verschiebe Springer auf " + f);
-				rekursivKlassisch(springer.getPosition(), pfad);
+			if(this.auszugebendeLoesungen > 0) {
+				helpful(pfad);
+				auszugebendeLoesungen -=1;
 			}
 			pfad.remove(aktuellesFeld);
 			besuchteFelder.remove(aktuellesFeld);
-		}				
+			
+		}
+		else {
+			List<Feld> verfuegbareFelder = moeglicheFelder();
+		
+			if(verfuegbareFelder.isEmpty()) {
+				// Springer kommt nicht weiter, gehe zureuck
+				//Debug 
+				/*
+				System.out.println("Kommt nicht weiter bei Feld: "+ aktuellesFeld + " schiebe ihn also zureuck");
+				*/ 
+				pfad.remove(aktuellesFeld);
+				besuchteFelder.remove(aktuellesFeld);
+			}
+			else {
+				for(Feld f: verfuegbareFelder) {		
+					verschiebeSpringer(f);
+				//	System.out.println("Verschiebe Springer auf " + f);
+					rekursivEinfach(springer.getPosition(), pfad);		
+				}	
+				pfad.remove(aktuellesFeld);
+			besuchteFelder.remove(aktuellesFeld);
+	
+			}
+		}	
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * Gibt den Erfolgreichen Pfad aus, falls er geschlossen ist, gibt es eine zusaetzliche Meldung
 	 * @param pfad der auszugebende Pfad
@@ -311,7 +353,7 @@ public class Schachbrett {
 	private void helpful(List<Feld> pfad) {
 		System.out.println("\n\nPfad, der ihr Problem loest: \n");
 		for(Feld f: pfad) {
-			System.out.print("--> " + f);
+			System.out.print(" --> " + f);
 		}
 		this.pfad = pfad;
 		
@@ -325,7 +367,18 @@ public class Schachbrett {
 		 // Negiere Voraussetzungen
 		 besuchteFelder.add(this.startFeld);
 	}
-	
+	private boolean containsFeld(Feld feld, List<Feld> zuUntersuchendeListe) {
+		boolean rueckgabe = false;
+		for(Feld f : zuUntersuchendeListe) {
+			if(feld.equals(f)) {
+				rueckgabe = true;
+			}
+			else {
+				continue;
+			}
+		}
+		return rueckgabe;
+	}
 	/**
 	 * Verschiebt die Position des Springers
 	 * @param wohin Feld, auf das der Springer verschoben wird
