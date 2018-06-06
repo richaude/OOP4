@@ -1,25 +1,19 @@
 package springerproblem;
 
+/**
+ * Einsprungsklasse fuer die Virtual Machine
+ * @author richard
+ *
+ */
 public class Main {
 
-	public Main() {
-		// TODO Auto-generated constructor stub
-	}
-
+	/**
+	 * Diese Methode erzeugt eine Instanz der Klasse Verwaltung und ruft an ihr die verwalten()-Funktion auf
+	 * @param args
+	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		Verwaltung verwaltung = new Verwaltung();
-		System.out.println(verwaltung.verwalten());
-		
-		
-		// Debug
-		/*
-		Feld feld = new Feld('D', 2);
-		Schachbrett s = new Schachbrett(5, feld);
-		// Rekursiv-Klassisch
-		s.koordiniere(false);
-		// Rekursives zeug funktioniert
-		*/
+		verwaltung.verwalten();
 	}
 
 }
